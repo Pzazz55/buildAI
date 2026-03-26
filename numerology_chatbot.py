@@ -105,6 +105,12 @@ color_map = {
 }
 
 # -----------------------------
+# Streamlit Config
+# -----------------------------
+st.set_page_config(page_title="Numerology AI", layout="centered")
+st.title("🔮 Numerology AI Chatbot")
+
+# -----------------------------
 # Initialize session state
 # -----------------------------
 if 'submitted' not in st.session_state:
@@ -121,13 +127,7 @@ def clear_form():
     st.session_state.submitted = False
     st.session_state.name = ""
     st.session_state.dob = None
-    st.experimental_rerun()  # Immediately rerun to clear form
-
-# -----------------------------
-# Page Config
-# -----------------------------
-st.set_page_config(page_title="Numerology AI", layout="centered")
-st.title("🔮 Numerology AI Chatbot")
+    st.experimental_rerun()  # Immediately reload home page
 
 # -----------------------------
 # Form
@@ -135,7 +135,6 @@ st.title("🔮 Numerology AI Chatbot")
 with st.form("numerology_form"):
 
     name_input = st.text_input("Full Name", value=st.session_state.name)
-
     dob_input = st.date_input(
         "Date of Birth",
         min_value=date(1,1,1),
@@ -150,7 +149,6 @@ with st.form("numerology_form"):
 # -----------------------------
 if submit_btn:
 
-    # Validation
     if not name_input.strip() or not dob_input:
         st.error("Please enter both Name and Date of Birth!")
     else:
@@ -159,7 +157,7 @@ if submit_btn:
         st.session_state.dob = dob_input
 
 # -----------------------------
-# Results Display
+# Display Results
 # -----------------------------
 if st.session_state.submitted:
 
@@ -192,7 +190,5 @@ if st.session_state.submitted:
     st.markdown(f"<h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>", unsafe_allow_html=True)
 
-    # -----------------------------
-    # Clear / Refresh Button
-    # -----------------------------
-    st.button("🔄 Clear", on_click=clear_form)
+    # Show Clear / Refresh button only after results
+    st.button("🔄 Clear / Refresh", on_click=clear_form)
