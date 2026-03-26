@@ -111,18 +111,26 @@ color_map = {
 # -----------------------------
 if 'show_clear' not in st.session_state:
     st.session_state.show_clear = False
-
 if 'name' not in st.session_state:
     st.session_state.name = ""
-
 if 'dob' not in st.session_state:
     st.session_state.dob = None
+if 'clear_request' not in st.session_state:
+    st.session_state.clear_request = False
 
 # -----------------------------
 # UI
 # -----------------------------
 st.set_page_config(page_title="Numerology AI", layout="centered")
 st.title("🔮 Numerology AI Chatbot")
+
+# Handle Clear / Refresh
+if st.session_state.clear_request:
+    st.session_state.name = ""
+    st.session_state.dob = None
+    st.session_state.show_clear = False
+    st.session_state.clear_request = False
+    st.experimental_rerun()  # Safe here at the top
 
 with st.form("numerology"):
 
@@ -184,11 +192,8 @@ if submit:
         )
 
 # -----------------------------
-# Clear / Refresh Button
+# Show Clear / Refresh Button only after submission
 # -----------------------------
 if st.session_state.show_clear:
     if st.button("🔄 Refresh / Clear"):
-        st.session_state.show_clear = False
-        st.session_state.name = ""
-        st.session_state.dob = None
-        st.experimental_rerun()
+        st.session_state.clear_request = True
