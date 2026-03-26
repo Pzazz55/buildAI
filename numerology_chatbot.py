@@ -118,6 +118,6 @@ if submit_button:
         color = color_map[evaluation]
         
         if evaluation == "Not Good":
-            st.markdown(f"<h3 style='color:{color}'>❌ Your Name is not good. Consider consulting a professional Astrologer for Name change. 📞 +91 9611-961-111</h3>", unsafe_allow_html=True)
+            st.markdown(f"<h3 style='color:{color}'>❌ Your Name needs evaluation. Consider consulting a professional Astrologer for Name Correction.</h3>", unsafe_allow_html=True)
         else:
             st.markdown(f"<h3 style='color:{color}'>✅ Your Name Evaluation: {evaluation}</h3>", unsafe_allow_html=True)
