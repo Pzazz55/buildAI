@@ -13,9 +13,9 @@ def reduce_to_single_digit(num):
 # Chaldean Numerology Mapping
 # -----------------------------
 chaldean_map = {
-    'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 8, 'G': 3, 'H': 5, 'I': 1,
-    'J': 1, 'K': 2, 'L': 3, 'M': 4, 'N': 5, 'O': 7, 'P': 8, 'Q': 1, 'R': 2,
-    'S': 3, 'T': 4, 'U': 6, 'V': 6, 'W': 6, 'X': 5, 'Y': 1, 'Z': 7
+    'A':1,'B':2,'C':3,'D':4,'E':5,'F':8,'G':3,'H':5,'I':1,
+    'J':1,'K':2,'L':3,'M':4,'N':5,'O':7,'P':8,'Q':1,'R':2,
+    'S':3,'T':4,'U':6,'V':6,'W':6,'X':5,'Y':1,'Z':7
 }
 
 # -----------------------------
@@ -42,19 +42,17 @@ def calculate_birth_number(day):
 # -----------------------------
 # Career Recommendation
 # -----------------------------
-def get_career_recommendation(num):
-    careers = {
-        1: "Leadership, Entrepreneurship, Management",
-        2: "Diplomat, HR, Counsellor",
-        3: "Creative, Media, Writing",
-        4: "Engineering, Technology, Analyst",
-        5: "Sales, Marketing, Travel",
-        6: "Teaching, Healthcare",
-        7: "Research, Data Science",
-        8: "Business, Finance, Management",
-        9: "Humanitarian, NGO"
-    }
-    return careers.get(num, "Unique path awaits you!")
+career_map = {
+    1: "Leadership, Entrepreneurship, Management",
+    2: "Diplomat, HR, Counsellor",
+    3: "Creative, Media, Writing",
+    4: "Engineering, Technology, Analyst",
+    5: "Sales, Marketing, Travel",
+    6: "Teaching, Healthcare",
+    7: "Research, Data Science",
+    8: "Business, Finance, Management",
+    9: "Humanitarian, NGO"
+}
 
 # -----------------------------
 # Name Evaluation Rules
@@ -71,12 +69,12 @@ rules = {
     9: [6,4]
 }
 
-def evaluate_name(destiny, birth, name):
-    if destiny == birth and name in rules.get(destiny, []):
+def evaluate_name(destiny, birth, name_number):
+    if destiny == birth and name_number in rules.get(destiny, []):
         return "Excellent"
-    elif name in rules.get(destiny, []):
+    elif name_number in rules.get(destiny, []):
         return "Very-Good"
-    elif name in rules.get(birth, []):
+    elif name_number in rules.get(birth, []):
         return "Average"
     else:
         return "Not Good"
@@ -109,91 +107,87 @@ color_map = {
 # -----------------------------
 # Initialize session state
 # -----------------------------
-if 'show_clear' not in st.session_state:
-    st.session_state.show_clear = False
+if 'submitted' not in st.session_state:
+    st.session_state.submitted = False
 if 'name' not in st.session_state:
     st.session_state.name = ""
 if 'dob' not in st.session_state:
     st.session_state.dob = None
-if 'clear_request' not in st.session_state:
-    st.session_state.clear_request = False
 
 # -----------------------------
-# UI
+# Page Config
 # -----------------------------
 st.set_page_config(page_title="Numerology AI", layout="centered")
 st.title("🔮 Numerology AI Chatbot")
 
-# Handle Clear / Refresh
-if st.session_state.clear_request:
-    st.session_state.name = ""
-    st.session_state.dob = None
-    st.session_state.show_clear = False
-    st.session_state.clear_request = False
-    st.experimental_rerun()  # Safe here at the top
+# -----------------------------
+# Form
+# -----------------------------
+with st.form("numerology_form"):
 
-with st.form("numerology"):
+    name_input = st.text_input("Full Name", value=st.session_state.name)
 
-    name = st.text_input("Full Name", value=st.session_state.name)
-    
-    dob = st.date_input(
+    dob_input = st.date_input(
         "Date of Birth",
         min_value=date(1,1,1),
         max_value=date.today(),
         value=st.session_state.dob if st.session_state.dob else date.today()
     )
 
-    submit = st.form_submit_button("Calculate")
+    submit_btn = st.form_submit_button("Calculate")
 
-if submit:
+# -----------------------------
+# Form Submit Handling
+# -----------------------------
+if submit_btn:
+
     # Validation
-    if not name or not dob:
-        st.warning("Please enter both Name and Date of Birth to continue.")
+    if not name_input.strip() or not dob_input:
+        st.error("Please enter both Name and Date of Birth!")
     else:
-        st.session_state.name = name
-        st.session_state.dob = dob
-        st.session_state.show_clear = True
-
-        birth_number = calculate_birth_number(dob.day)
-        destiny_number = calculate_destiny_number(dob)
-        name_number = calculate_name_number(name)
-
-        st.markdown("---")
-        st.subheader("🔢 Numerology Numbers")
-        st.write(f"**Birth Number:** {birth_number}")
-        st.write(f"**Destiny / Path Number:** {destiny_number}")
-        st.write(f"**Name Number:** {name_number}")
-
-        st.info(f"💼 Career Recommendation: {get_career_recommendation(destiny_number)}")
-
-        evaluation = evaluate_name(destiny_number, birth_number, name_number)
-        color = color_map[evaluation]
-
-        st.markdown("---")
-        st.markdown(
-            f"<h2 style='color:{color}'>Name Evaluation : {evaluation}</h2>",
-            unsafe_allow_html=True
-        )
-
-        if evaluation == "Not Good":
-            st.error(
-                "Your name is not aligned. Consider consulting professional astrologer for name change. 📞 +91 9611-961-111"
-            )
-
-        data = path_data[destiny_number]
-        st.markdown("---")
-        st.subheader("🌟 Path Number Guidance")
-        st.markdown(
-            f"<h4 style='color:yellow'>🍀 Lucky Dates: {data['lucky']}</h4>"
-            f"<h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>"
-            f"<h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>"
-            f"<h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>",
-            unsafe_allow_html=True
-        )
+        st.session_state.submitted = True
+        st.session_state.name = name_input.strip()
+        st.session_state.dob = dob_input
 
 # -----------------------------
-# Show Clear / Refresh Button only after submission
+# Results Display
 # -----------------------------
-if st.session_state.show_clear:
-    if st.button("🔄 Refresh / Clear"):
-        st.session_state.clear_request = True
+if st.session_state.submitted:
+
+    birth_number = calculate_birth_number(st.session_state.dob.day)
+    destiny_number = calculate_destiny_number(st.session_state.dob)
+    name_number = calculate_name_number(st.session_state.name)
+
+    st.markdown("---")
+    st.subheader("🔢 Numerology Numbers")
+    st.write(f"**Birth Number:** {birth_number}")
+    st.write(f"**Destiny / Path Number:** {destiny_number}")
+    st.write(f"**Name Number:** {name_number}")
+
+    st.info(f"💼 Career Recommendation: {career_map.get(destiny_number, 'Unique path awaits you!')}")
+
+    evaluation = evaluate_name(destiny_number, birth_number, name_number)
+    color = color_map[evaluation]
+
+    st.markdown("---")
+    st.markdown(f"<h2 style='color:{color}'>Name Evaluation : {evaluation}</h2>", unsafe_allow_html=True)
+
+    if evaluation == "Not Good":
+        st.error("Your name is not aligned. Consider consulting professional astrologer for name change. 📞 +91 9611-961-111")
+
+    data = path_data.get(destiny_number)
+    st.markdown("---")
+    st.subheader("🌟 Path Number Guidance")
+    st.markdown(f"<h4 style='color:yellow'>🍀 Lucky Dates: {data['lucky']}</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>", unsafe_allow_html=True)
+
+    # -----------------------------
+    # Clear / Refresh Button
+    # -----------------------------
+    if st.button("🔄 Clear / Refresh"):
+        st.session_state.submitted = False
+        st.session_state.name = ""
+        st.session_state.dob = None
+        st.experimental_rerun()  # Safe here only after user clicks
