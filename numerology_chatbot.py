@@ -159,7 +159,7 @@ if submit:
     st.subheader("🌟 Path Number Guidance")
 
     html_content = f"""
-    <h4 style='color:yellow'>🍀 Lucky Dates: {data['lucky']}</h4>
+    <h4 style='color:amber'>🍀 Lucky Dates: {data['lucky']}</h4>
     <h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>
     <h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>
     <h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>
