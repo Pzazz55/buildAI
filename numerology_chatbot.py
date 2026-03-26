@@ -112,72 +112,76 @@ color_map = {
 st.set_page_config(page_title="Numerology AI", layout="centered")
 st.title("🔮 Numerology AI Chatbot")
 
-# Initialize session state for form reset
-if "clear" not in st.session_state:
-    st.session_state.clear = False
+# Initialize session state
+if "show_clear" not in st.session_state:
+    st.session_state.show_clear = False
 
 def reset_form():
-    st.session_state.clear = True
+    st.session_state.show_clear = False
     st.experimental_rerun()
 
 with st.form("numerology"):
 
-    # Use empty string if session_state.clear is True
-    default_name = "" if st.session_state.clear else ""
-    default_dob = date.today() if st.session_state.clear else date.today()
-
-    name = st.text_input("Full Name", value=default_name)
+    # Blank inputs on first load
+    name = st.text_input("Full Name", value="")
     dob = st.date_input(
         "Date of Birth",
         min_value=date(1,1,1),
         max_value=date.today(),
-        value=default_dob
+        value=date.today()
     )
 
     submit = st.form_submit_button("Calculate")
 
 if submit:
-    # Reset clear flag after calculation
-    st.session_state.clear = False
+    # Validate mandatory fields
+    if not name:
+        st.warning("Please enter your Name.")
+    elif not dob:
+        st.warning("Please select your Date of Birth.")
+    else:
+        # Enable Clear button
+        st.session_state.show_clear = True
 
-    birth_number = calculate_birth_number(dob.day)
-    destiny_number = calculate_destiny_number(dob)
-    name_number = calculate_name_number(name)
+        birth_number = calculate_birth_number(dob.day)
+        destiny_number = calculate_destiny_number(dob)
+        name_number = calculate_name_number(name)
 
-    st.markdown("---")
-    st.subheader("🔢 Numerology Numbers")
-    st.write(f"**Birth Number:** {birth_number}")
-    st.write(f"**Destiny / Path Number:** {destiny_number}")
-    st.write(f"**Name Number:** {name_number}")
+        st.markdown("---")
+        st.subheader("🔢 Numerology Numbers")
+        st.write(f"**Birth Number:** {birth_number}")
+        st.write(f"**Destiny / Path Number:** {destiny_number}")
+        st.write(f"**Name Number:** {name_number}")
 
-    st.info(f"💼 Career Recommendation: {get_career_recommendation(destiny_number)}")
+        st.info(f"💼 Career Recommendation: {get_career_recommendation(destiny_number)}")
 
-    evaluation = evaluate_name(destiny_number, birth_number, name_number)
-    color = color_map[evaluation]
+        evaluation = evaluate_name(destiny_number, birth_number, name_number)
+        color = color_map[evaluation]
 
-    st.markdown("---")
-    st.markdown(f"<h2 style='color:{color}'>Name Evaluation : {evaluation}</h2>", unsafe_allow_html=True)
+        st.markdown("---")
+        st.markdown(f"<h2 style='color:{color}'>Name Evaluation : {evaluation}</h2>", unsafe_allow_html=True)
 
-    if evaluation == "Not Good":
-        st.error(
-            "Your name is not aligned. Consider consulting professional astrologer for name change. 📞 +91 9611-961-111"
-        )
+        if evaluation == "Not Good":
+            st.error(
+                "Your name is not aligned. Consider consulting professional astrologer for name change. 📞 +91 9611-961-111"
+            )
 
-    data = path_data[destiny_number]
+        data = path_data[destiny_number]
 
-    st.markdown("---")
-    st.subheader("🌟 Path Number Guidance")
+        st.markdown("---")
+        st.subheader("🌟 Path Number Guidance")
 
-    html_content = f"""
-    <h4 style='color:yellow'>🍀 Lucky Dates: {data['lucky']}</h4>
-    <h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>
-    <h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>
-    <h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>
-    """
-    st.markdown(html_content, unsafe_allow_html=True)
+        html_content = f"""
+        <h4 style='color:yellow'>🍀 Lucky Dates: {data['lucky']}</h4>
+        <h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>
+        <h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>
+        <h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>
+        """
+        st.markdown(html_content, unsafe_allow_html=True)
 
 # -----------------------------
-# Refresh / Clear Button
+# Clear / Refresh Button
 # -----------------------------
-if st.button("🔄 Refresh / Clear"):
-    reset_form()
+if st.session_state.show_clear:
+    if st.button("🔄 Refresh / Clear"):
+        reset_form()
