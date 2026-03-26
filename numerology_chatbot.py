@@ -131,7 +131,7 @@ with st.form("numerology_form"):
         "Date of Birth",
         min_value=date(1,1,1),
         max_value=date.today(),
-        value=st.session_state.dob if st.session_state.dob else date.today()
+        value=st.session_state.dob
     )
 
     submit_btn = st.form_submit_button("Calculate")
@@ -190,4 +190,4 @@ if st.session_state.submitted:
         st.session_state.submitted = False
         st.session_state.name = ""
         st.session_state.dob = None
-        st.experimental_rerun()  # Safe here only after user clicks
+        st.experimental_rerun()  # Safe after click
