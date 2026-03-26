@@ -161,9 +161,9 @@ if submit:
     st.markdown("---")
     st.subheader("🌟 Path Number Guidance")
 
-    st.success(f"🍀 Lucky Dates: {data['lucky']}")
-    st.info(f"👍 Favourable Dates: {data['fav']}")
-    st.warning(f"💎 Lucky Stone: {data['stone']}")
+    st.success(f"<h4 style='color:green'>🍀 Lucky Dates: {data['lucky']}</h4>")
+    st.info(f"<h4 style='color:green'>👍 Favourable Dates: {data['fav']}</h4>")
+    st.warning(f"<h4 style='color:green'>💎 Lucky Stone: {data['stone']}</h4>")
 
     st.markdown(
         f"<h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>",
