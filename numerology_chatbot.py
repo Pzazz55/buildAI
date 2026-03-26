@@ -36,8 +36,8 @@ def calculate_destiny_number(dob):
 # -----------------------------
 # Calculate Birth Number
 # -----------------------------
-def calculate_birth_number(month):
-    birth_num = month % 9
+def calculate_birth_number(day):
+    birth_num = day % 9
     return 9 if birth_num == 0 else birth_num
 
 # -----------------------------
