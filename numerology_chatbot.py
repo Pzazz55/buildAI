@@ -178,7 +178,7 @@ if st.session_state.submitted:
     data = path_data.get(destiny_number)
     st.markdown("---")
     st.subheader("🌟 Path Number Guidance")
-    st.markdown(f"<h4 style='color:yellow'>🍀 Lucky Dates: {data['lucky']}</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='color:orange'>🍀 Lucky Dates: {data['lucky']}</h4>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>", unsafe_allow_html=True)
