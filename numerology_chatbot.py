@@ -54,7 +54,7 @@ def get_career_recommendation(num):
         8: "Business, Finance, Management",
         9: "Humanitarian, NGO"
     }
-    return careers.get(num)
+    return careers.get(num, "Unique path awaits you!")
 
 # -----------------------------
 # Name Evaluation Rules
@@ -107,40 +107,43 @@ color_map = {
 }
 
 # -----------------------------
-# Streamlit UI
+# Initialize session state
+# -----------------------------
+if 'show_clear' not in st.session_state:
+    st.session_state.show_clear = False
+
+if 'name' not in st.session_state:
+    st.session_state.name = ""
+
+if 'dob' not in st.session_state:
+    st.session_state.dob = None
+
+# -----------------------------
+# UI
 # -----------------------------
 st.set_page_config(page_title="Numerology AI", layout="centered")
 st.title("🔮 Numerology AI Chatbot")
 
-# Initialize session state
-if "show_clear" not in st.session_state:
-    st.session_state.show_clear = False
-
-def reset_form():
-    st.session_state.show_clear = False
-    st.experimental_rerun()
-
 with st.form("numerology"):
 
-    # Blank inputs on first load
-    name = st.text_input("Full Name", value="")
+    name = st.text_input("Full Name", value=st.session_state.name)
+    
     dob = st.date_input(
         "Date of Birth",
         min_value=date(1,1,1),
         max_value=date.today(),
-        value=date.today()
+        value=st.session_state.dob if st.session_state.dob else date.today()
     )
 
     submit = st.form_submit_button("Calculate")
 
 if submit:
-    # Validate mandatory fields
-    if not name:
-        st.warning("Please enter your Name.")
-    elif not dob:
-        st.warning("Please select your Date of Birth.")
+    # Validation
+    if not name or not dob:
+        st.warning("Please enter both Name and Date of Birth to continue.")
     else:
-        # Enable Clear button
+        st.session_state.name = name
+        st.session_state.dob = dob
         st.session_state.show_clear = True
 
         birth_number = calculate_birth_number(dob.day)
@@ -159,7 +162,10 @@ if submit:
         color = color_map[evaluation]
 
         st.markdown("---")
-        st.markdown(f"<h2 style='color:{color}'>Name Evaluation : {evaluation}</h2>", unsafe_allow_html=True)
+        st.markdown(
+            f"<h2 style='color:{color}'>Name Evaluation : {evaluation}</h2>",
+            unsafe_allow_html=True
+        )
 
         if evaluation == "Not Good":
             st.error(
@@ -167,21 +173,22 @@ if submit:
             )
 
         data = path_data[destiny_number]
-
         st.markdown("---")
         st.subheader("🌟 Path Number Guidance")
-
-        html_content = f"""
-        <h4 style='color:yellow'>🍀 Lucky Dates: {data['lucky']}</h4>
-        <h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>
-        <h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>
-        <h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>
-        """
-        st.markdown(html_content, unsafe_allow_html=True)
+        st.markdown(
+            f"<h4 style='color:yellow'>🍀 Lucky Dates: {data['lucky']}</h4>"
+            f"<h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>"
+            f"<h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>"
+            f"<h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>",
+            unsafe_allow_html=True
+        )
 
 # -----------------------------
 # Clear / Refresh Button
 # -----------------------------
 if st.session_state.show_clear:
     if st.button("🔄 Refresh / Clear"):
-        reset_form()
+        st.session_state.show_clear = False
+        st.session_state.name = ""
+        st.session_state.dob = None
+        st.experimental_rerun()
