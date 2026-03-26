@@ -27,14 +27,14 @@ def calculate_name_number(name):
     return reduce_to_single_digit(total)
 
 # -----------------------------
-# Destiny Number (FIXED)
+# Destiny Number
 # -----------------------------
 def calculate_destiny_number(dob):
     total = dob.day + dob.month + dob.year
     return reduce_to_single_digit(total)
 
 # -----------------------------
-# Birth Number (FIXED)
+# Birth Number
 # -----------------------------
 def calculate_birth_number(day):
     return reduce_to_single_digit(day)
@@ -45,14 +45,14 @@ def calculate_birth_number(day):
 def get_career_recommendation(num):
     careers = {
         1: "Leadership, Entrepreneurship, Management",
-        2: "Diplomat, HR, Counsellor, Partnerships",
-        3: "Creative, Media, Writing, Entertainment",
+        2: "Diplomat, HR, Counsellor",
+        3: "Creative, Media, Writing",
         4: "Engineering, Technology, Analyst",
-        5: "Sales, Marketing, Travel, Communication",
-        6: "Teaching, Healthcare, Hospitality",
-        7: "Research, Data Science, Spiritual",
-        8: "Business, Finance, Administration",
-        9: "Humanitarian, NGO, Global Service"
+        5: "Sales, Marketing, Travel",
+        6: "Teaching, Healthcare",
+        7: "Research, Data Science",
+        8: "Business, Finance, Management",
+        9: "Humanitarian, NGO"
     }
     return careers.get(num)
 
@@ -114,8 +114,16 @@ st.set_page_config(page_title="Numerology AI", layout="centered")
 st.title("🔮 Numerology AI Chatbot")
 
 with st.form("numerology"):
+
     name = st.text_input("Full Name")
-    dob = st.date_input("Date of Birth")
+
+    dob = st.date_input(
+        "Date of Birth",
+        min_value=date(1,1,1),
+        max_value=date.today(),
+        value=date(1987,8,2)
+    )
+
     submit = st.form_submit_button("Calculate")
 
 if submit:
@@ -131,10 +139,8 @@ if submit:
     st.write(f"**Destiny / Path Number:** {destiny_number}")
     st.write(f"**Name Number:** {name_number}")
 
-    # Career
     st.info(f"💼 Career Recommendation: {get_career_recommendation(destiny_number)}")
 
-    # Name evaluation
     evaluation = evaluate_name(destiny_number, birth_number, name_number)
     color = color_map[evaluation]
 
@@ -150,7 +156,6 @@ if submit:
             "Your name is not aligned. Consider consulting professional astrologer for name change. 📞 +91 9611-961-111"
         )
 
-    # Path number guidance
     data = path_data[destiny_number]
 
     st.markdown("---")
