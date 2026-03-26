@@ -115,6 +115,15 @@ if 'dob' not in st.session_state:
     st.session_state.dob = None
 
 # -----------------------------
+# Clear Form Function
+# -----------------------------
+def clear_form():
+    st.session_state.submitted = False
+    st.session_state.name = ""
+    st.session_state.dob = None
+    st.experimental_rerun()  # Immediately rerun to clear form
+
+# -----------------------------
 # Page Config
 # -----------------------------
 st.set_page_config(page_title="Numerology AI", layout="centered")
@@ -178,7 +187,7 @@ if st.session_state.submitted:
     data = path_data.get(destiny_number)
     st.markdown("---")
     st.subheader("🌟 Path Number Guidance")
-    st.markdown(f"<h4 style='color:orange'>🍀 Lucky Dates: {data['lucky']}</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='color:yellow'>🍀 Lucky Dates: {data['lucky']}</h4>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>", unsafe_allow_html=True)
@@ -186,8 +195,4 @@ if st.session_state.submitted:
     # -----------------------------
     # Clear / Refresh Button
     # -----------------------------
-    if st.button("🔄 Clear / Refresh"):
-        st.session_state.submitted = False
-        st.session_state.name = ""
-        st.session_state.dob = None
-        st.experimental_rerun()  # Safe after click
+    st.button("🔄 Clear", on_click=clear_form)
