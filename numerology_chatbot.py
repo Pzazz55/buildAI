@@ -1,0 +1,41 @@
+!pip install streamlit pyngrok --quiet
+
+%%writefile numerology_chatbot.py
+import streamlit as st
+from datetime import datetime
+
+# Function to calculate destiny number
+def calculate_destiny_number(dob):
+    total = dob.day + dob.month + dob.year
+    while total > 9:
+        total = sum(int(digit) for digit in str(total))
+    return total
+
+# Function to give career recommendations
+def get_career_recommendation(destiny_number):
+    rec = {
+        1: "Leader, Entrepreneur, Innovator.",
+        2: "Diplomat, Counselor, Supportive roles.",
+        3: "Creative fields, Writing, Art, Entertainment.",
+        4: "Organized, Engineer, Analyst, Researcher.",
+        5: "Adventurer, Travel, Marketing, Sales.",
+        6: "Careers in service, Teaching, Healing professions.",
+        7: "Research, Spiritual work, Analyst, Scientist.",
+        8: "Business, Management, Finance, Authority roles.",
+        9: "Humanitarian, Social work, Art, Global causes."
+    }
+    return rec.get(destiny_number, "Unique path awaits you!")
+
+# Streamlit App
+st.title("Numerology Chatbot")
+
+# Using a form with date picker
+with st.form(key='dob_form'):
+    name = st.text_input("Enter Your Name")
+    dob = st.date_input("Enter your Date of Birth")
+    submit_button = st.form_submit_button(label='Get Destiny Number')
+
+if submit_button:
+    destiny_number = calculate_destiny_number(dob)
+    st.success(f"Hello {name}, your Destiny Number is: {destiny_number}")
+    st.info(f"Suggested Career Path: {get_career_recommendation(destiny_number)}")
