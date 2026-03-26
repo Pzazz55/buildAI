@@ -1,5 +1,5 @@
 import streamlit as st
-from datetime import datetime
+from datetime import datetime, date
 
 # Function to calculate destiny number
 def calculate_destiny_number(dob):
@@ -24,12 +24,18 @@ def get_career_recommendation(destiny_number):
     return rec.get(destiny_number, "Unique path awaits you!")
 
 # Streamlit App
-st.title("Numerology Chatbot")
+st.set_page_config(page_title="Numerology Chatbot", layout="centered")
+st.title("🔮 Numerology Chatbot")
 
-# Using a form with date picker
+st.write("Enter your Name and Date of Birth to get your Destiny Number and Career Recommendation!")
+
+# Form with Name input + Date Picker restricted to past dates
 with st.form(key='dob_form'):
     name = st.text_input("Enter Your Name")
-    dob = st.date_input("Enter your Date of Birth")
+    dob = st.date_input(
+        "Enter your Date of Birth",
+        max_value=date.today()  # only past dates allowed
+    )
     submit_button = st.form_submit_button(label='Get Destiny Number')
 
 if submit_button:
