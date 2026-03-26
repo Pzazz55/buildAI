@@ -127,7 +127,7 @@ def clear_form():
     st.session_state.submitted = False
     st.session_state.name = ""
     st.session_state.dob = None
-    st.experimental_rerun()  # Immediately reload home page
+    st.experimental_rerun()  # Reload blank home screen
 
 # -----------------------------
 # Form
@@ -135,11 +135,14 @@ def clear_form():
 with st.form("numerology_form"):
 
     name_input = st.text_input("Full Name", value=st.session_state.name)
+
+    # Use placeholder date (will be ignored until user selects)
+    placeholder_date = date(1900,1,1)
     dob_input = st.date_input(
         "Date of Birth",
         min_value=date(1,1,1),
         max_value=date.today(),
-        value=st.session_state.dob
+        value=st.session_state.dob if st.session_state.dob else placeholder_date
     )
 
     submit_btn = st.form_submit_button("Calculate")
@@ -149,7 +152,7 @@ with st.form("numerology_form"):
 # -----------------------------
 if submit_btn:
 
-    if not name_input.strip() or not dob_input:
+    if not name_input.strip() or dob_input == placeholder_date:
         st.error("Please enter both Name and Date of Birth!")
     else:
         st.session_state.submitted = True
