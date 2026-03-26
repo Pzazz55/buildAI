@@ -34,7 +34,7 @@ def calculate_destiny_number(dob):
     return total
 
 # -----------------------------
-# Calculate Birth Number
+# Calculate Birth Number (from day of birth)
 # -----------------------------
 def calculate_birth_number(day):
     birth_num = day % 9
@@ -77,12 +77,12 @@ if submit_button:
     if not name:
         st.error("Please enter your name!")
     else:
-        birth_number = calculate_birth_number(dob.month)
+        birth_number = calculate_birth_number(dob.day)  # corrected here
         destiny_number = calculate_destiny_number(dob)
         name_number = calculate_name_number(name)
 
         st.success(f"Hello {name}!")
-        st.write(f"**Birth Number:** {birth_number}")
+        st.write(f"**Birth Number (Day of Birth):** {birth_number}")
         st.write(f"**Destiny Number:** {destiny_number}")
         st.write(f"**Name Number:** {name_number}")
         st.info(f"Suggested Career Path: {get_career_recommendation(destiny_number)}")
