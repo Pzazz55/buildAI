@@ -1,4 +1,4 @@
-!pip install streamlit pyngrok --quiet
+#!pip install streamlit pyngrok --quiet
 
 %%writefile numerology_chatbot.py
 import streamlit as st
