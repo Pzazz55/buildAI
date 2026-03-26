@@ -29,12 +29,13 @@ st.title("🔮 Numerology Chatbot")
 
 st.write("Enter your Name and Date of Birth to get your Destiny Number and Career Recommendation!")
 
-# Form with Name input + Date Picker restricted to past dates
+# Form with Name input + Date Picker restricted from 1/1/0001 to today
 with st.form(key='dob_form'):
     name = st.text_input("Enter Your Name")
     dob = st.date_input(
         "Enter your Date of Birth",
-        max_value=date.today()  # only past dates allowed
+        min_value=date(1, 1, 1),   # earliest selectable date
+        max_value=date.today()      # latest selectable date
     )
     submit_button = st.form_submit_button(label='Get Destiny Number')
 
