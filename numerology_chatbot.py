@@ -107,10 +107,9 @@ color_map = {
 }
 
 # -----------------------------
-# UI
+# Streamlit UI
 # -----------------------------
 st.set_page_config(page_title="Numerology AI", layout="centered")
-
 st.title("🔮 Numerology AI Chatbot")
 
 with st.form("numerology"):
@@ -121,11 +120,14 @@ with st.form("numerology"):
         "Date of Birth",
         min_value=date(1,1,1),
         max_value=date.today(),
-        value=date(1987,8,2)
+        value=date.today()  # default today
     )
 
     submit = st.form_submit_button("Calculate")
 
+# -----------------------------
+# Display Results
+# -----------------------------
 if submit:
 
     birth_number = calculate_birth_number(dob.day)
@@ -134,7 +136,6 @@ if submit:
 
     st.markdown("---")
     st.subheader("🔢 Numerology Numbers")
-
     st.write(f"**Birth Number:** {birth_number}")
     st.write(f"**Destiny / Path Number:** {destiny_number}")
     st.write(f"**Name Number:** {name_number}")
@@ -145,11 +146,7 @@ if submit:
     color = color_map[evaluation]
 
     st.markdown("---")
-
-    st.markdown(
-        f"<h2 style='color:{color}'>Name Evaluation : {evaluation}</h2>",
-        unsafe_allow_html=True
-    )
+    st.markdown(f"<h2 style='color:{color}'>Name Evaluation : {evaluation}</h2>", unsafe_allow_html=True)
 
     if evaluation == "Not Good":
         st.error(
@@ -161,13 +158,6 @@ if submit:
     st.markdown("---")
     st.subheader("🌟 Path Number Guidance")
 
-    # st.success(f"<h4 style='color:green'>🍀 Lucky Dates: {data['lucky']}</h4>")
-    # st.info(f"<h4 style='color:green'>👍 Favourable Dates: {data['fav']}</h4>")
-    # st.warning(f"<h4 style='color:green'>💎 Lucky Stone: {data['stone']}</h4>")
-
-    # -----------------------------
-    # Path Number Guidance Display
-    # -----------------------------
     html_content = f"""
     <h4 style='color:yellow'>🍀 Lucky Dates: {data['lucky']}</h4>
     <h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>
@@ -176,4 +166,8 @@ if submit:
     """
     st.markdown(html_content, unsafe_allow_html=True)
 
-
+# -----------------------------
+# Refresh / Clear Button
+# -----------------------------
+if st.button("🔄 Refresh / Clear"):
+    st.experimental_rerun()
