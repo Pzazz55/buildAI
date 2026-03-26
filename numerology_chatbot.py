@@ -168,7 +168,7 @@ if submit:
     st.markdown(
         f"<h4 style='color:yellow'>🍀 Lucky Dates: {data['lucky']}</h4>",
         f"<h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>",
-        f<h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>
+        f<h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>",
         f"<h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>",
         unsafe_allow_html=True
     )
