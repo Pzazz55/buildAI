@@ -82,7 +82,7 @@ if submit_button:
         name_number = calculate_name_number(name)
 
         st.success(f"Hello {name}!")
-        st.write(f"**Birth Number (Day of Birth):** {birth_number}")
+        st.write(f"**Birth Number:** {birth_number}")
         st.write(f"**Destiny Number:** {destiny_number}")
         st.write(f"**Name Number:** {name_number}")
         st.info(f"Suggested Career Path: {get_career_recommendation(destiny_number)}")
