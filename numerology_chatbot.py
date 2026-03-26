@@ -2,6 +2,14 @@ import streamlit as st
 from datetime import date
 
 # -----------------------------
+# Helper: Reduce to single digit
+# -----------------------------
+def reduce_to_single_digit(num):
+    while num > 9:
+        num = sum(int(d) for d in str(num))
+    return num
+
+# -----------------------------
 # Chaldean Numerology Mapping
 # -----------------------------
 chaldean_map = {
@@ -11,47 +19,42 @@ chaldean_map = {
 }
 
 # -----------------------------
-# Calculate Name Number
+# Name Number
 # -----------------------------
 def calculate_name_number(name):
     name = name.upper()
-    total = sum(chaldean_map.get(char, 0) for char in name)
-    while total > 9:
-        total = sum(int(d) for d in str(total))
-    return total
+    total = sum(chaldean_map.get(c, 0) for c in name if c.isalpha())
+    return reduce_to_single_digit(total)
 
 # -----------------------------
-# Destiny Number
+# Destiny Number (FIXED)
 # -----------------------------
 def calculate_destiny_number(dob):
     total = dob.day + dob.month + dob.year
-    while total > 9:
-        total = sum(int(d) for d in str(total))
-    return total
+    return reduce_to_single_digit(total)
 
 # -----------------------------
-# Birth Number (Day)
+# Birth Number (FIXED)
 # -----------------------------
 def calculate_birth_number(day):
-    birth = day % 9
-    return 9 if birth == 0 else birth
+    return reduce_to_single_digit(day)
 
 # -----------------------------
 # Career Recommendation
 # -----------------------------
 def get_career_recommendation(num):
-    data = {
-        1: "Leadership, Business Owner, Entrepreneur",
+    careers = {
+        1: "Leadership, Entrepreneurship, Management",
         2: "Diplomat, HR, Counsellor, Partnerships",
         3: "Creative, Media, Writing, Entertainment",
-        4: "Engineering, Technology, Analyst, Builder",
+        4: "Engineering, Technology, Analyst",
         5: "Sales, Marketing, Travel, Communication",
-        6: "Teaching, Healthcare, Service, Hospitality",
-        7: "Research, Spiritual, Data Science, Analysis",
-        8: "Management, Finance, Authority roles",
-        9: "Humanitarian, NGO, Global roles"
+        6: "Teaching, Healthcare, Hospitality",
+        7: "Research, Data Science, Spiritual",
+        8: "Business, Finance, Administration",
+        9: "Humanitarian, NGO, Global Service"
     }
-    return data[num]
+    return careers.get(num)
 
 # -----------------------------
 # Name Evaluation Rules
@@ -82,14 +85,14 @@ def evaluate_name(destiny, birth, name):
 # Path Number Data
 # -----------------------------
 path_data = {
-    1: {"lucky":[1,10,19,28],"fav":[4,13,22,31],"stone":"Ruby, Yellow Sapphire","color":"Golden, Sky Blue, Yellow"},
+    1: {"lucky":[1,10,19,28],"fav":[4,13,22,31],"stone":"Ruby, Yellow Sapphire","color":"Golden Color, Sky Blue, Yellow"},
     2: {"lucky":[2,11,20,29],"fav":[7,16,25],"stone":"Moonstone, Pearl","color":"White"},
     3: {"lucky":[3,12,21,30],"fav":[9,18,27],"stone":"Yellow Sapphire, Emerald","color":"Orange, Rose"},
-    4: {"lucky":[4,13,22,31],"fav":[1,10,19,28],"stone":"Light Blue Sapphire","color":"Golden, Sky Blue"},
-    5: {"lucky":[5,14,23],"fav":[9,18,27],"stone":"Diamond","color":"Sky Blue, Grey, Golden"},
+    4: {"lucky":[4,13,22,31],"fav":[1,10,19,28],"stone":"Light Blue Sapphire","color":"Golden Color, Sky Blue"},
+    5: {"lucky":[5,14,23],"fav":[9,18,27],"stone":"Diamond","color":"Sky Blue, Grey, Golden Color"},
     6: {"lucky":[6,15,24],"fav":[9,18,27],"stone":"Emerald","color":"Dark Green, Blue"},
     7: {"lucky":[7,16,25],"fav":[1,10,19,28],"stone":"Pearl","color":"White, Light Green"},
-    8: {"lucky":[1,10,19,28],"fav":[4,13,22,31],"stone":"Dark Blue Sapphire","color":"Golden, Sky Blue"},
+    8: {"lucky":[1,10,19,28],"fav":[4,13,22,31],"stone":"Dark Blue Sapphire","color":"Golden Color, Sky Blue"},
     9: {"lucky":[9,18,27],"fav":[1,10,19,28],"stone":"Coral","color":"Red, Dark Blue, Light Green"}
 }
 
@@ -104,14 +107,13 @@ color_map = {
 }
 
 # -----------------------------
-# Streamlit UI
+# UI
 # -----------------------------
 st.set_page_config(page_title="Numerology AI", layout="centered")
 
 st.title("🔮 Numerology AI Chatbot")
-st.write("Enter your Name and Date of Birth")
 
-with st.form("form"):
+with st.form("numerology"):
     name = st.text_input("Full Name")
     dob = st.date_input("Date of Birth")
     submit = st.form_submit_button("Calculate")
@@ -123,7 +125,6 @@ if submit:
     name_number = calculate_name_number(name)
 
     st.markdown("---")
-
     st.subheader("🔢 Numerology Numbers")
 
     st.write(f"**Birth Number:** {birth_number}")
@@ -133,7 +134,7 @@ if submit:
     # Career
     st.info(f"💼 Career Recommendation: {get_career_recommendation(destiny_number)}")
 
-    # Name Evaluation
+    # Name evaluation
     evaluation = evaluate_name(destiny_number, birth_number, name_number)
     color = color_map[evaluation]
 
@@ -146,10 +147,10 @@ if submit:
 
     if evaluation == "Not Good":
         st.error(
-            "Your name is not aligned. Consider consulting a professional Astrologer for Name change. 📞 +91 9611-961-111"
+            "Your name is not aligned. Consider consulting professional astrologer for name change. 📞 +91 9611-961-111"
         )
 
-    # Path Number Guidance
+    # Path number guidance
     data = path_data[destiny_number]
 
     st.markdown("---")
