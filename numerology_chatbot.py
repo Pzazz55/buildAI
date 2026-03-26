@@ -112,23 +112,33 @@ color_map = {
 st.set_page_config(page_title="Numerology AI", layout="centered")
 st.title("🔮 Numerology AI Chatbot")
 
+# Initialize session state for form reset
+if "clear" not in st.session_state:
+    st.session_state.clear = False
+
+def reset_form():
+    st.session_state.clear = True
+    st.experimental_rerun()
+
 with st.form("numerology"):
 
-    name = st.text_input("Full Name")
+    # Use empty string if session_state.clear is True
+    default_name = "" if st.session_state.clear else ""
+    default_dob = date.today() if st.session_state.clear else date.today()
 
+    name = st.text_input("Full Name", value=default_name)
     dob = st.date_input(
         "Date of Birth",
         min_value=date(1,1,1),
         max_value=date.today(),
-        value=date.today()  # default today
+        value=default_dob
     )
 
     submit = st.form_submit_button("Calculate")
 
-# -----------------------------
-# Display Results
-# -----------------------------
 if submit:
+    # Reset clear flag after calculation
+    st.session_state.clear = False
 
     birth_number = calculate_birth_number(dob.day)
     destiny_number = calculate_destiny_number(dob)
@@ -159,7 +169,7 @@ if submit:
     st.subheader("🌟 Path Number Guidance")
 
     html_content = f"""
-    <h4 style='color:orange'>🍀 Lucky Dates: {data['lucky']}</h4>
+    <h4 style='color:yellow'>🍀 Lucky Dates: {data['lucky']}</h4>
     <h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>
     <h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>
     <h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>
@@ -170,4 +180,4 @@ if submit:
 # Refresh / Clear Button
 # -----------------------------
 if st.button("🔄 Refresh / Clear"):
-    st.experimental_rerun()
+    reset_form()
