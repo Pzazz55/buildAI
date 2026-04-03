@@ -113,48 +113,66 @@ st.title("🔮 Numerology AI Chatbot")
 # -----------------------------
 # Initialize session state
 # -----------------------------
-if 'submitted' not in st.session_state:
+if "submitted" not in st.session_state:
     st.session_state.submitted = False
-if 'name' not in st.session_state:
+
+if "name" not in st.session_state:
     st.session_state.name = ""
-if 'dob' not in st.session_state:
+
+if "dob" not in st.session_state:
     st.session_state.dob = None
 
+if "name_input" not in st.session_state:
+    st.session_state.name_input = ""
+
+if "dob_input" not in st.session_state:
+    st.session_state.dob_input = None
+
+
 # -----------------------------
-# Clear Form Function
+# Clear Form
 # -----------------------------
 def clear_form():
-    # st.session_state.submitted = False
-    # st.session_state.name = ""
-    # st.session_state.dob = None
-    st.experimental_rerun()  # Immediately reload home page
+    st.session_state.submitted = False
+    st.session_state.name = ""
+    st.session_state.dob = None
+    st.session_state.name_input = ""
+    st.session_state.dob_input = None
+    st.rerun()
+
 
 # -----------------------------
 # Form
 # -----------------------------
 with st.form("numerology_form"):
 
-    name_input = st.text_input("Full Name", value=st.session_state.name)
+    name_input = st.text_input(
+        "Full Name",
+        key="name_input"
+    )
+
     dob_input = st.date_input(
         "Date of Birth",
         min_value=date(1,1,1),
         max_value=date.today(),
-        value=st.session_state.dob
+        key="dob_input"
     )
 
     submit_btn = st.form_submit_button("Calculate")
 
+
 # -----------------------------
-# Form Submit Handling
+# Submit Handling
 # -----------------------------
 if submit_btn:
 
-    if not name_input.strip() or not dob_input:
+    if not name_input.strip():
         st.error("Please enter both Name and Date of Birth!")
     else:
         st.session_state.submitted = True
         st.session_state.name = name_input.strip()
         st.session_state.dob = dob_input
+
 
 # -----------------------------
 # Display Results
@@ -167,28 +185,56 @@ if st.session_state.submitted:
 
     st.markdown("---")
     st.subheader("🔢 Numerology Numbers")
+
     st.write(f"**Birth Number:** {birth_number}")
     st.write(f"**Destiny / Path Number:** {destiny_number}")
     st.write(f"**Name Number:** {name_number}")
 
-    st.info(f"💼 Career Recommendation: {career_map.get(destiny_number, 'Unique path awaits you!')}")
+    st.info(
+        f"💼 Career Recommendation: "
+        f"{career_map.get(destiny_number, 'Unique path awaits you!')}"
+    )
 
     evaluation = evaluate_name(destiny_number, birth_number, name_number)
     color = color_map[evaluation]
 
     st.markdown("---")
-    st.markdown(f"<h2 style='color:{color}'>Name Evaluation : {evaluation}</h2>", unsafe_allow_html=True)
+    st.markdown(
+        f"<h2 style='color:{color}'>Name Evaluation : {evaluation}</h2>",
+        unsafe_allow_html=True
+    )
 
     if evaluation == "Not Good":
-        st.error("Your name is not aligned. Consider consulting professional astrologer for name change. 📞 +91 9611-961-111")
+        st.error(
+            "Your name is not aligned. "
+            "Consider consulting professional astrologer 📞 +91 9611-961-111"
+        )
 
     data = path_data.get(destiny_number)
+
     st.markdown("---")
     st.subheader("🌟 Path Number Guidance")
-    st.markdown(f"<h4 style='color:orange'>🍀 Lucky Dates: {data['lucky']}</h4>", unsafe_allow_html=True)
-    st.markdown(f"<h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>", unsafe_allow_html=True)
-    st.markdown(f"<h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>", unsafe_allow_html=True)
-    st.markdown(f"<h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>", unsafe_allow_html=True)
 
-    # Show Clear / Refresh button only after results
+    st.markdown(
+        f"<h4 style='color:orange'>🍀 Lucky Dates: {data['lucky']}</h4>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        f"<h4 style='color:blue'>👍 Favourable Dates: {data['fav']}</h4>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        f"<h4 style='color:red'>💎 Lucky Stone: {data['stone']}</h4>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        f"<h4 style='color:green'>🎨 Lucky Color: {data['color']}</h4>",
+        unsafe_allow_html=True
+    )
+
+    # Clear button
+    st.markdown("---")
     st.button("🔄 Clear / Refresh", on_click=clear_form)
