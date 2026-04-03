@@ -207,7 +207,7 @@ if st.session_state.submitted:
     if evaluation == "Not Good":
         st.error(
             "Your name is not aligned. "
-            "Consider consulting professional astrologer 📞 +91 9611-961-111"
+            "Consider consulting professional astrologer 📞 +91 8309-362626"
         )
 
     data = path_data.get(destiny_number)
