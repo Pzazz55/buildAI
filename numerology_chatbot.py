@@ -138,7 +138,7 @@ def clear_form():
     st.session_state.dob = None
     st.session_state.name_input = ""
     st.session_state.dob_input = None
-    st.rerun()
+    #st.rerun()
 
 
 # -----------------------------
