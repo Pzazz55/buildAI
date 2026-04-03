@@ -124,9 +124,9 @@ if 'dob' not in st.session_state:
 # Clear Form Function
 # -----------------------------
 def clear_form():
-    st.session_state.submitted = False
-    st.session_state.name = ""
-    st.session_state.dob = None
+    # st.session_state.submitted = False
+    # st.session_state.name = ""
+    # st.session_state.dob = None
     st.experimental_rerun()  # Immediately reload home page
 
 # -----------------------------
